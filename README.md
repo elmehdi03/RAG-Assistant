@@ -1,213 +1,222 @@
-##🤖 RAG Assistant
-A Retrieval-Augmented Generation (RAG) assistant that answers questions in natural language using the content of your own documents (PDFs, reports, technical manuals…).
-This project implements a complete RAG pipeline from scratch, without relying on LangChain or LlamaIndex — giving full control over ingestion, embedding, retrieval, and response generation.
-
-##🎯 Objectives
-
-
-Create an intelligent assistant able to retrieve and summarize knowledge from local documents.
-
-
-Demonstrate a modular and transparent RAG pipeline using FAISS and SentenceTransformers.
-
-
-Build an interactive Streamlit interface to query documents in real time.
-
-
-
-##💡 Typical Use Cases
-
-
-🏦 Regulatory assistant – Basel IV / banking compliance documentation
-
-
-⚙️ DevOps / technical assistant – internal configuration or process manuals
-
-
-🧑‍💼 Corporate knowledge base – company procedures or internal memos
-
-
-🎓 Academic or research helper – paper summarization or literature search
-
-
-
-##⚙️ Architecture
-The pipeline consists of five main components:
-
-
-Document Ingestion → ingestion.py
-
-
-Extracts and cleans text from PDF files using PyPDF2
-
-
-Splits documents into context-preserving chunks
-
-
-
-
-Embeddings Generation → embeddings.py
-
-
-Uses SentenceTransformers (all-MiniLM-L6-v2) to convert text chunks into dense vectors
-
-
-Saves embeddings and metadata locally for fast reuse
-
-
-
-
-Vector Search (Retrieval) → faiss.IndexFlatIP
-
-
-Performs high-speed similarity search using FAISS
-
-
-Returns the top-k most relevant document chunks
-
-
-
-
-RAG Pipeline → rag_pipeline.py
-
-
-Combines retrieved context with the user’s query
-
-
-Generates a contextual response (with a local fallback or future LLM integration)
-
-
-
-
-Web Interface → app.py
-
-
-Streamlit-based UI with GPU detection, cache validation, and live querying
-
-
-
-
-
-##🛠️ Tech Stack
-CategoryToolsLanguagePython 3.xVector IndexingFAISSEmbeddingsSentenceTransformers (Hugging Face)ParsingPyPDF2InterfaceStreamlitUtilitiesNumPy, Pickle, Torch (CUDA support)
-
-##📂 Project Structure
-rag-assistant/
-├── data/                    # Document storage
-│   ├── *.pdf                # Source PDF files
-│   ├── faiss_index.bin      # FAISS vector index
-│   └── metadata.pkl         # Embedding metadata
-│
-├── src/                     # Core source code
-│   ├── ingestion.py         # PDF parsing & cleaning
-│   ├── embeddings.py        # Embedding generation & FAISS operations
-│   ├── retriever.py         # Vector search logic
-│   ├── rag_pipeline.py      # RAG orchestration
-│   └── app.py               # Streamlit web interface
-│
-├── requirements.txt         # Python dependencies
-├── LICENSE
-└── README.md
-
-
-🚀 Getting Started
-1️⃣ Prerequisites
-python --version   # Python 3.8+
+# 🤖 RAG Assistant
+
+A local, privacy-first Retrieval-Augmented Generation (RAG) assistant that answers natural-language questions using the content of your own documents (PDFs, reports, manuals…). This project implements a transparent RAG pipeline from ingestion → embeddings → FAISS retrieval → response generation, without requiring LangChain or LlamaIndex.
+
+✨ Highlights
+- 🔒 Local-first: documents, embeddings, and index are stored locally for privacy and offline use.  
+- 🧩 Modular: replace ingestion, embedding model, or LLM easily.  
+- 🖥️ Lightweight UI: Streamlit-based interface for quick exploration.
+
+Status: Prototype / demo — suitable for experimentation and local use.
+
+---
+
+Table of Contents
+- 🚀 Features
+- ⚡ Quick Start
+- 🗂️ Project Layout
+- 🧠 How it works (architecture)
+- ⚙️ Configuration
+- 🧪 Examples
+- 🛠️ Troubleshooting & Tips
+- 🛣️ Roadmap
+- 🤝 Contributing
+- 📜 License
+- ✉️ Contact
+
+---
+
+## 🚀 Features
+- 📄 PDF ingestion and text extraction (PyPDF2)  
+- ✂️ Chunking to keep context boundaries  
+- 🧠 Embeddings using SentenceTransformers (default: all-MiniLM-L6-v2)  
+- 🔎 Vector store and similarity search with FAISS (fast, local)  
+- 🧩 Simple RAG pipeline with a placeholder LLM (easy to hook into OpenAI / Ollama / others)  
+- 🌐 Streamlit UI for real-time question answering
+
+---
+
+## ⚡ Quick Start (5 minutes)
+
+1️⃣ Clone and install
+```bash
+git clone https://github.com/elmehdi03/rag-assistant.git
+cd rag-assistant
+python -m venv .venv
+source .venv/bin/activate    # on Windows use .venv\Scripts\activate
 pip install -r requirements.txt
+```
 
-If FAISS fails to install:
-# CPU
-pip install faiss-cpu
-# or GPU (for RTX 4070 and similar)
-pip install faiss-gpu
+2️⃣ Add documents
+- Put PDF files in the `data/` directory:
+  - `data/your_manual.pdf`
+  - `data/other_docs.pdf`
 
-2️⃣ Build the FAISS Index
-Place your PDFs inside the data/ folder, then run:
+3️⃣ Build the FAISS index (ingest, embed, index)
+```bash
 python src/ingestion.py
-
+```
 This will:
+- 📥 Load PDFs from `data/`
+- 🧼 Extract and clean text
+- 🧩 Split into chunks (configurable)
+- ⚙️ Create embeddings and store FAISS index + metadata to `data/`
 
-
-Load all documents
-
-
-Extract and chunk text
-
-
-Generate embeddings
-
-
-Build and save the FAISS index (faiss_index.bin)
-
-
-3️⃣ Launch the Web Interface
+4️⃣ Run the Streamlit app
+```bash
 streamlit run src/app.py
+```
+Open http://localhost:8501 in your browser and ask a question like:
+- “Who won the World Cup?” ⚽  
+- “What does Basel IV say about credit risk?” 📚
 
-The app will open in your browser at http://localhost:8501
-Type a question such as:
+---
 
-“Who won the World Cup?” or “What does Basel IV say about credit risk?”
+## 🗂️ Project layout
+rag-assistant/
+- data/                    # Document storage & generated index
+  - *.pdf                  # Source PDF files
+  - faiss_index.bin        # FAISS binary index (generated)
+  - metadata.pkl           # Chunk metadata (generated)
+- src/
+  - ingestion.py           # PDF parsing, cleaning, chunking
+  - embeddings.py          # Embedding generation, FAISS operations
+  - retriever.py           # Retrieval logic
+  - rag_pipeline.py        # Combines context + query and calls an LLM
+  - app.py                 # Streamlit UI
+- requirements.txt
+- LICENSE
+- README.md
 
+---
 
-##⚙️ Configuration
-Embedding Model
-Default model:
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+## 🧠 How it works (high level)
+1. 📥 Ingestion: PDF → text → cleaned paragraphs → chunks (context-preserving)  
+2. 🧠 Embeddings: text chunks → vector embeddings (SentenceTransformers)  
+3. 🗃️ Indexing: FAISS index built from vectors, metadata stored separately  
+4. 🔎 Retrieval: nearest-neighbor search (top-k) returns best chunks  
+5. 📝 RAG: retrieved chunks + user prompt are fed to an LLM function (replaceable) to produce an answer, optionally with citations
 
-You can replace it in embeddings.py with any SentenceTransformer model.
-LLM Integration (Optional)
-In rag_pipeline.py, replace the placeholder fake_llm() function with your own LLM API call (e.g. OpenAI GPT-4, Mistral, Claude, or a local model via Ollama).
+---
 
-##📈 Roadmap
+## ⚙️ Configuration
 
+Embedding model (default)
+- `src/embeddings.py` uses:
+  model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+- Swap to any SentenceTransformer model by changing the name or path. 🔁
 
- PDF ingestion and cleaning
+FAISS installation
+- CPU:
+  ```bash
+  pip install faiss-cpu
+  ```
+- GPU:
+  ```bash
+  pip install faiss-gpu
+  ```
+If installation fails, see Troubleshooting below. 🧰
 
+LLM integration
+- The repo ships with a simple placeholder (`fake_llm`) for demo responses.
+- To use a production LLM:
+  - Replace `fake_llm` in `src/rag_pipeline.py` with a function that calls OpenAI, Ollama, Mistral, Claude, etc. ☁️
+  - Ensure you handle token limits and truncate or summarize retrieved chunks if needed.
 
- SentenceTransformer embeddings
+Example: minimal OpenAI integration (conceptual)
+```python
+# in src/rag_pipeline.py
+import os
+import openai
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
- FAISS indexing and retrieval
+def call_openai(prompt: str, max_tokens=512, temperature=0.0):
+    resp = openai.ChatCompletion.create(
+        model="gpt-4o-mini",  # choose the model you have access to
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=max_tokens,
+        temperature=temperature,
+    )
+    return resp["choices"][0]["message"]["content"].strip()
+```
+🔐 Keep secrets out of the code; use environment variables.
 
+---
 
- Streamlit interface
+## 🧪 Usage examples (Python)
+Programmatic search + answer:
+```python
+from src.ingestion import load_documents_from_folder
+from src.embeddings import build_faiss_index, search
+from src.rag_pipeline import ragpipeline
 
-
- Integration with production LLMs (Mistral / GPT-4)
-
-
- Improved semantic chunking
-
-
- Source citation display in UI
-
-
- Document upload from interface
-
-
- Conversation memory
-
-
- Dockerization & cloud deployment
-
-
-
-##🧠 Example Workflow
-from ingestion import load_documents_from_folder
-from embeddings import build_faiss_index, search
-from rag_pipeline import ragpipeline
-
-# 1. Load and embed documents
+# Build index (one-time)
 texts, metadata = load_documents_from_folder("data")
 build_faiss_index(texts, metadata)
 
-# 2. Ask a question
+# Ask a question
 query = "What does Basel IV say about credit risk?"
-results = search(query, k=3)
-answer = ragpipeline(query)
-
+results = search(query, k=3)      # returns nearest chunks
+answer = ragpipeline(query)       # contextualized answer
 print(answer)
+```
 
+Streamlit UI
+- The UI shows GPU detection, cache validation, and lets you query the loaded index interactively. 🖱️
 
-##📜 License
-This project is released under the MIT License.
+---
+
+## 🛠️ Troubleshooting & tips
+- FAISS install errors:
+  - Use `faiss-cpu` if you don't have an NVidia GPU: `pip install faiss-cpu` 🧾
+  - On Linux, ensure `gcc` and `python-dev` headers are installed.
+- CUDA / GPU:
+  - If using `faiss-gpu`, CUDA drivers and toolkit must match your GPU. 🔌
+- Large PDFs:
+  - Consider increasing chunk size or using an initial text-cleaning pass to remove boilerplate. 🧹
+- Embedding reuse:
+  - The embedding step saves metadata and vectors. Re-run ingestion only when documents change. 🔁
+- Reducing index size:
+  - Remove stopwords or apply light normalization before embedding (experimental). 🔬
+
+---
+
+## 🛣️ Roadmap (planned)
+- ✨ Improved semantic chunking and adaptive chunk size  
+- 📎 Source citation display in UI (show chunk origins)  
+- ♻️ Conversation memory (context across turns)  
+- 📤 Document upload from the UI  
+- 🐳 Dockerfile and containerized deployment  
+- 🔗 Integration examples for OpenAI, Ollama, Mistral, and local LLMs  
+- ✅ CI automation and tests
+
+---
+
+## 🤝 Contributing
+- Contributions welcome! Open an issue or a PR.  
+- Suggestion flow:
+  1. Create an issue describing the change 📝  
+  2. Add tests where relevant ✅  
+  3. Keep changes modular (ingestion, embeddings, retriever, UI) 🛠️
+
+Code style / linting
+- Prefer small, well-tested changes. Use `black` / `flake8` if adding more code.
+
+---
+
+## 📜 License
+MIT — see LICENSE file. 🧾
+
+---
+
+## 🙏 Acknowledgements
+- SentenceTransformers (UKPLab / Hugging Face) ❤️  
+- FAISS (Facebook AI Research) ⚡  
+- Streamlit 🌊
+
+---
+
+## ✉️ Contact
+Maintainer: @elmehdi03  
+Report issues at: https://github.com/elmehdi03/rag-assistant/issues
