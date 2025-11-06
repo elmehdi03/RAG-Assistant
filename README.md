@@ -1,4 +1,4 @@
-# RAG Assistant# 📚 RAG Assistant# 📚 RAG Assistant# 📚 RAG Assistant
+# RAG Assistant# 📚
 
 
 
