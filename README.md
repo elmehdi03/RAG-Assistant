@@ -6,7 +6,9 @@ A Retrieval-Augmented Generation (RAG) assistant that answers questions based on
 
 
 
-## OverviewA Retrieval-Augmented Generation (RAG) assistant that answers questions in natural language based on a document knowledge base. This project implements a complete RAG pipeline from scratch without using LangChain or LlamaIndex frameworks.
+## Overview
+
+A Retrieval-Augmented Generation (RAG) assistant that answers questions in natural language based on a document knowledge base. This project implements a complete RAG pipeline from scratch without using LangChain or LlamaIndex frameworks.
 
 
 
