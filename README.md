@@ -1,13 +1,16 @@
 # 🤖 RAG Assistant
 
-A local, privacy-first Retrieval-Augmented Generation (RAG) assistant that answers natural-language questions using the content of your own documents (PDFs, reports, manuals…). This project implements a transparent RAG pipeline from ingestion → embeddings → FAISS retrieval → response generation, without requiring LangChain or LlamaIndex.
+A production-ready Retrieval-Augmented Generation (RAG) assistant that answers natural-language questions using the content of your own documents (PDFs, reports, manuals…). This project implements a transparent RAG pipeline from ingestion → embeddings → FAISS retrieval → response generation, without requiring LangChain or LlamaIndex.
 
 ✨ Highlights
-- 🔒 Local-first: documents, embeddings, and index are stored locally for privacy and offline use.  
+- � Production-Ready: Real LLM integration (Mistral AI), GPU acceleration, professional UI  
+- 📦 Local-first: documents, embeddings, and index are stored locally for privacy and offline use.  
 - 🧩 Modular: replace ingestion, embedding model, or LLM easily.  
-- 🖥️ Lightweight UI: Streamlit-based interface for quick exploration.
+- 🖥️ Professional UI: Streamlit-based interface with gradient design, status indicators, and source citations.
+- ⚡ GPU-Accelerated: Optimized for NVIDIA GPUs (CUDA 12.1) with CPU fallback
+- 👁️ File Monitoring: Automatic PDF detection and re-indexing via watchdog
 
-Status: Prototype / demo — suitable for experimentation and local use.
+Status: **Production-Ready** — suitable for deployment and real-world use.
 
 ---
 
@@ -28,11 +31,14 @@ Table of Contents
 
 ## 🚀 Features
 - 📄 PDF ingestion and text extraction (PyPDF2)  
-- ✂️ Chunking to keep context boundaries  
-- 🧠 Embeddings using SentenceTransformers (default: all-MiniLM-L6-v2)  
-- 🔎 Vector store and similarity search with FAISS (fast, local)  
-- 🧩 Simple RAG pipeline with a placeholder LLM (easy to hook into OpenAI / Ollama / others)  
-- 🌐 Streamlit UI for real-time question answering
+- ✂️ Context-preserving chunking with metadata tracking  
+- 🧠 GPU-accelerated embeddings using SentenceTransformers (all-MiniLM-L6-v2)  
+- 🔎 FAISS vector store with similarity search (CPU index, GPU-accelerated embeddings)  
+- � Real LLM integration with Mistral AI (mistral-small model)  
+- 🌐 Professional Streamlit UI with gradient design, adjustable parameters, and source citations
+- 📊 System status monitoring (GPU, cache validation, PDF count)
+- 👁️ Automatic file monitoring and re-indexing (watchdog)
+- ⚡ Full GPU support with CUDA 12.1 and CPU fallback
 
 ---
 

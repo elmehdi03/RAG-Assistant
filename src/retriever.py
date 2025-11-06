@@ -1,26 +1,24 @@
+"""
+Vector Search Retrieval
+
+This module provides search functionality for finding
+relevant document chunks from the FAISS index.
+"""
+
 from embeddings import search
+
 
 def retrieve_relevant_chunks(query, k=5):
     """
-    Récupère les k chunks les plus pertinents à partir de FAISS.
+    Retrieve the top-k most relevant document chunks for a query.
+    
+    Args:
+        query (str): The search query
+        k (int): Number of results to return
+        
+    Returns:
+        list: List of tuples (similarity_score, metadata)
     """
     results = search(query, k=k)
     return results
 
-if __name__ == "__main__":
-    q = "What does Basel IV say about credit risk?"
-    chunks = retrieve_relevant_chunks(q, k=3)
-    print("Résultats de recherche :", chunks)
-from embeddings import search
-
-def retrieve_relevant_chunks(query, k=5):
-    """
-    Récupère les k chunks les plus pertinents à partir de FAISS.
-    """
-    results = search(query, k=k)
-    return results
-
-if __name__ == "__main__":
-    q = "What does Basel IV say about credit risk?"
-    chunks = retrieve_relevant_chunks(q, k=3)
-    print("Résultats de recherche :", chunks)
