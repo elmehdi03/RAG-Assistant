@@ -4,12 +4,15 @@ Uses Mistral AI for high-quality contextual answers.
 """
 
 import os
+from dotenv import load_dotenv
 from retriever import retrieve_relevant_chunks
 from mistralai import Mistral
 
+# Load environment variables from .env file
+load_dotenv()
 
-# Initialize Mistral client
-MISTRAL_API_KEY = "wF6qweukYefJOgPUXf8tbNeHt25uaApe"
+# Initialize Mistral client with API key from environment
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 client = Mistral(api_key=MISTRAL_API_KEY) if MISTRAL_API_KEY else None
 
 

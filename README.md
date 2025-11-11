@@ -78,7 +78,35 @@ Open http://localhost:8501 in your browser and ask a question like:
 
 ---
 
-## 🗂️ Project layout
+## � Security & API Configuration
+
+### Setting up Mistral API Key (Secure Method)
+
+**Never commit API keys to git!** This project uses environment variables for secure configuration.
+
+1. **Copy the template:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Get your API key:**
+   - Visit [Mistral AI Console](https://console.mistral.ai/)
+   - Create an account or sign in
+   - Generate a new API key
+
+3. **Add to `.env` file:**
+   ```bash
+   MISTRAL_API_KEY=your-actual-api-key-here
+   ```
+
+4. **Verify it's protected:**
+   - The `.env` file is automatically git-ignored
+   - Never share or commit this file
+   - Each team member should have their own `.env` file
+
+---
+
+## �🗂️ Project layout
 rag-assistant/
 - data/                    # Document storage & generated index
   - *.pdf                  # Source PDF files
