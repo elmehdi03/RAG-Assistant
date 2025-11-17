@@ -72,7 +72,7 @@ This will:
 ```bash
 streamlit run src/app.py
 ```
-Open http://localhost:8501 in your browser and ask a question like:
+Open http://localhost:8501 (or check terminal output for actual port) in your browser and ask a question like:
 - “Who won the World Cup?” ⚽  
 - “What does Basel IV say about credit risk?” 📚
 
@@ -152,9 +152,11 @@ FAISS installation
 If installation fails, see Troubleshooting below. 🧰
 
 LLM integration
-- The repo ships with a simple placeholder (`fake_llm`) for demo responses.
-- To use a production LLM:
-  - Replace `fake_llm` in `src/rag_pipeline.py` with a function that calls OpenAI, Ollama, Mistral, Claude, etc. ☁️
+- The project uses Mistral AI for production-ready LLM responses.
+- API key is configured via `.env` file (see Security & API Configuration section above).
+- To switch to a different LLM provider:
+  - Modify the LLM call in `src/rag_pipeline.py`
+  - Add your provider's API key to the `.env` file
   - Ensure you handle token limits and truncate or summarize retrieved chunks if needed.
 
 Example: minimal OpenAI integration (conceptual)
@@ -162,31 +164,33 @@ Example: minimal OpenAI integration (conceptual)
 # in src/rag_pipeline.py
 import os
 import openai
+from dotenv import load_dotenv
 
+load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def call_openai(prompt: str, max_tokens=512, temperature=0.0):
     resp = openai.ChatCompletion.create(
-        model="gpt-4o-mini",  # choose the model you have access to
+        model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         max_tokens=max_tokens,
         temperature=temperature,
     )
     return resp["choices"][0]["message"]["content"].strip()
 ```
-🔐 Keep secrets out of the code; use environment variables.
+🔐 Always use environment variables for API keys — never commit them to git.
 
 ---
 
 ## 🧪 Usage examples (Python)
 Programmatic search + answer:
 ```python
-from src.ingestion import load_documents_from_folder
+from src.ingestion import load_documents_from_pdf
 from src.embeddings import build_faiss_index, search
 from src.rag_pipeline import ragpipeline
 
 # Build index (one-time)
-texts, metadata = load_documents_from_folder("data")
+texts, metadata = load_documents_from_pdf("data")
 build_faiss_index(texts, metadata)
 
 # Ask a question
