@@ -40,7 +40,7 @@ def call_mistral(prompt: str, max_tokens: int = 512, temperature: float = 0.7) -
     
     try:
         message = client.chat.complete(
-            model="mistral-small",
+            model="mistral-small-latest",
             messages=[
                 {"role": "user", "content": prompt}
             ],

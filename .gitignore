@@ -205,3 +205,16 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ===============================================================
+# RAG Assistant Project Specific
+# ===============================================================
+
+# Ignore everything in data folder
+data/*
+
+# But keep the directory structure with a .gitkeep file
+!data/.gitkeep
+
+# Streamlit cache
+.streamlit/

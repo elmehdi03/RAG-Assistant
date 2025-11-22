@@ -198,6 +198,49 @@ with st.sidebar:
     - 🧠 LLM: Mistral AI
     - 📄 Parser: PyPDF2
     """)
+    
+    st.divider()
+    st.markdown("## 📤 Upload PDFs")
+    
+    uploaded_files = st.file_uploader(
+        "Upload PDF files",
+        type=["pdf"],
+        accept_multiple_files=True,
+        help="Upload one or more PDF files to add to the knowledge base"
+    )
+    
+    if uploaded_files:
+        if st.button("💾 Save & Re-index", use_container_width=True):
+            with st.spinner("Saving files and rebuilding index..."):
+                try:
+                    from embeddings import build_faiss_index, save_cache_hash
+                    from ingestion import load_documents_from_pdf
+                    import shutil
+                    
+                    saved_count = 0
+                    for uploaded_file in uploaded_files:
+                        # Save to data directory
+                        save_path = os.path.join("data", uploaded_file.name)
+                        with open(save_path, "wb") as f:
+                            f.write(uploaded_file.getbuffer())
+                        saved_count += 1
+                        st.success(f"✅ Saved: {uploaded_file.name}")
+                    
+                    # Re-index all documents
+                    texts, metadata = load_documents_from_pdf("data")
+                    if texts:
+                        build_faiss_index(texts, metadata)
+                        save_cache_hash()
+                        st.success(f"🎉 Successfully indexed {len(texts)} chunks from {saved_count} file(s)!")
+                        st.balloons()
+                        st.info("💡 Refresh the page or scroll up to start querying")
+                    else:
+                        st.error("❌ No content extracted from uploaded files")
+                        
+                except Exception as e:
+                    st.error(f"❌ Error during upload: {str(e)}")
+                    import traceback
+                    st.code(traceback.format_exc())
 
 
 # ===============================================================

@@ -34,7 +34,7 @@ Table of Contents
 - ✂️ Context-preserving chunking with metadata tracking  
 - 🧠 GPU-accelerated embeddings using SentenceTransformers (all-MiniLM-L6-v2)  
 - 🔎 FAISS vector store with similarity search (CPU index, GPU-accelerated embeddings)  
-- � Real LLM integration with Mistral AI (mistral-small model)  
+- 🧠 Real LLM integration with Mistral AI (mistral-small-latest model)  
 - 🌐 Professional Streamlit UI with gradient design, adjustable parameters, and source citations
 - 📊 System status monitoring (GPU, cache validation, PDF count)
 - 👁️ Automatic file monitoring and re-indexing (watchdog)
