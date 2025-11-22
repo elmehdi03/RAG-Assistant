@@ -3,12 +3,12 @@
 A production-ready Retrieval-Augmented Generation (RAG) assistant that answers natural-language questions using the content of your own documents (PDFs, reports, manuals…). This project implements a transparent RAG pipeline from ingestion → embeddings → FAISS retrieval → response generation, without requiring LangChain or LlamaIndex.
 
 ✨ Highlights
-- � Production-Ready: Real LLM integration (Mistral AI), GPU acceleration, professional UI  
+- 🎯 Production-Ready: Real LLM integration (Mistral AI), GPU acceleration, professional UI  
 - 📦 Local-first: documents, embeddings, and index are stored locally for privacy and offline use.  
 - 🧩 Modular: replace ingestion, embedding model, or LLM easily.  
 - 🖥️ Professional UI: Streamlit-based interface with gradient design, status indicators, and source citations.
 - ⚡ GPU-Accelerated: Optimized for NVIDIA GPUs (CUDA 12.1) with CPU fallback
-- 👁️ File Monitoring: Automatic PDF detection and re-indexing via watchdog
+- 📤 Direct Upload: Upload PDFs directly through the UI with automatic re-indexing
 
 Status: **Production-Ready** — suitable for deployment and real-world use.
 
@@ -37,7 +37,7 @@ Table of Contents
 - 🧠 Real LLM integration with Mistral AI (mistral-small-latest model)  
 - 🌐 Professional Streamlit UI with gradient design, adjustable parameters, and source citations
 - 📊 System status monitoring (GPU, cache validation, PDF count)
-- 👁️ Automatic file monitoring and re-indexing (watchdog)
+- 📤 Direct PDF upload with automatic re-indexing
 - ⚡ Full GPU support with CUDA 12.1 and CPU fallback
 
 ---
@@ -106,7 +106,7 @@ Open http://localhost:8501 (or check terminal output for actual port) in your br
 
 ---
 
-## �🗂️ Project layout
+## 🗂️ Project layout
 rag-assistant/
 - data/                    # Document storage & generated index
   - *.pdf                  # Source PDF files
@@ -114,10 +114,10 @@ rag-assistant/
   - metadata.pkl           # Chunk metadata (generated)
 - src/
   - ingestion.py           # PDF parsing, cleaning, chunking
-  - embeddings.py          # Embedding generation, FAISS operations
-  - retriever.py           # Retrieval logic
+  - embeddings.py          # Embedding generation, FAISS operations, search
   - rag_pipeline.py        # Combines context + query and calls an LLM
-  - app.py                 # Streamlit UI
+  - app.py                 # Streamlit UI with file upload
+  - watcher.py             # Optional: standalone file monitoring utility
 - requirements.txt
 - LICENSE
 - README.md
@@ -236,7 +236,7 @@ Streamlit UI
 - Suggestion flow:
   1. Create an issue describing the change 📝  
   2. Add tests where relevant ✅  
-  3. Keep changes modular (ingestion, embeddings, retriever, UI) 🛠️
+  3. Keep changes modular (ingestion, embeddings, RAG pipeline, UI) 🛠️
 
 Code style / linting
 - Prefer small, well-tested changes. Use `black` / `flake8` if adding more code.
