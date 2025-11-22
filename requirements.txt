@@ -15,9 +15,6 @@ pandas>=2.3.3
 # Hugging Face
 huggingface-hub>=0.20.0
 
-# Monitoring
-watchdog>=4.0.0
-
 # LLM Integration
 mistralai>=0.0.7
 

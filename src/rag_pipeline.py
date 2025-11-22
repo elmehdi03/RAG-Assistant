@@ -5,7 +5,7 @@ Uses Mistral AI for high-quality contextual answers.
 
 import os
 from dotenv import load_dotenv
-from retriever import retrieve_relevant_chunks
+from embeddings import search
 from mistralai import Mistral
 
 # Load environment variables from .env file
@@ -66,7 +66,7 @@ def ragpipeline(question: str) -> str:
         str: Generated answer based on retrieved context
     """
     # Retrieve relevant chunks from FAISS
-    results = retrieve_relevant_chunks(question, k=3)
+    results = search(question, k=3)
 
     # Build context from retrieved chunks
     context_texts = []

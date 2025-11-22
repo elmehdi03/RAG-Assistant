@@ -9,8 +9,7 @@ import streamlit as st
 import os
 from pathlib import Path
 from rag_pipeline import ragpipeline
-from retriever import retrieve_relevant_chunks
-from embeddings import is_cache_valid
+from embeddings import is_cache_valid, search
 
 
 # ===============================================================
@@ -288,7 +287,7 @@ else:
                 answer = ragpipeline(question)
                 
                 # Get relevant chunks for display
-                relevant_chunks = retrieve_relevant_chunks(question, k=k_results)
+                relevant_chunks = search(question, k=k_results)
                 
                 # Display answer
                 st.markdown("## 🧠 Answer")
